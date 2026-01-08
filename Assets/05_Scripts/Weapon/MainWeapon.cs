@@ -2,19 +2,20 @@
 
 public class MainWeapon : MonoBehaviour
 {
-    [Header("References")]
+    [Header("References"), Tooltip("탄환과 이펙트가 나오는 위치")]
     public Transform muzzle;
+    public Transform muzzleVFX;
 
-    [Header("Hit-scan")]
+    [Header("Hit-scan"), Tooltip("히트 스캔 방식에 필요한 변수")]
     public float hitscanRange = 30f;
-    public int hitDamage = 1;
+    public int hitDamage = 30;
 
-    [Header("Ballistic")]
+    [Header("Ballistic"), Tooltip("탄도학 계산에 필요한 변수")]
     public float bulletSpeed = 800f;
     public float fireRate = 0.1f;
     float lastFireTime;
 
-    [Header("Spread")]
+    [Header("Spread"), Tooltip("탄환 퍼짐 정도")]
     public float spreadAngle = 0.6f;
 
     DamageSystem dms;
@@ -29,12 +30,11 @@ public class MainWeapon : MonoBehaviour
         if (Time.time < lastFireTime + fireRate) return;
         lastFireTime = Time.time;
 
-        Debug.Log("Fire");
+        //Vector3 dir = GetSpreadDirection();
+        Vector3 dir = muzzle.forward;
 
-
-        Vector3 dir = GetSpreadDirection();
-
-        if (Physics.Raycast(muzzle.position, dir, out RaycastHit hit, hitscanRange))
+        Debug.DrawRay(muzzle.position, dir * hitscanRange, Color.red);
+        if (Physics.Raycast(muzzle.position, dir, out var hit, hitscanRange))
         {
             if (hit.collider.TryGetComponent<IDamageable>(out var dmg))
             {
