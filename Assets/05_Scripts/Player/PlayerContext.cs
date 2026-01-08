@@ -34,6 +34,7 @@ public class PlayerContext : MonoBehaviour
     private void OnEnable()
     {
         InitMovementStateMachine();
+        InitActionStateMachine();
     }
 
     private void Start()
@@ -71,7 +72,8 @@ public class PlayerContext : MonoBehaviour
 
     private void InitActionStateMachine()
     {
-        ActionSM = new StateMachine(StateName.Fire, new FireState(player));
+        ActionSM = new StateMachine(StateName.ActionIdle, new ActionIdleState(player));
+        ActionSM.AddState(StateName.Fire, new FireState(player));
         ActionSM.AddState(StateName.Reload, new ReloadState(player));
         ActionSM.AddState(StateName.Melee, new MeleeState(player));
         ActionSM.AddState(StateName.Throw, new ThrowState(player));

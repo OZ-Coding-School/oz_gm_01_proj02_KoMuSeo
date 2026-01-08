@@ -20,6 +20,9 @@ public class GameManager : MonoBehaviour, IRegistryAdder
     {
         AddRegistry();
         StartCoroutine(Co_PlayLoop());
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     private IEnumerator Co_PlayLoop()

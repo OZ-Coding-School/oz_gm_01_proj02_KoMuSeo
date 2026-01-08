@@ -8,7 +8,8 @@ namespace StateController
         Move,
         Jump,
         Crouch,
-        Fire = 200,
+        ActionIdle = 200,
+        Fire,
         Reload,
         Melee,
         Throw

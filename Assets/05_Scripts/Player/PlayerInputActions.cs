@@ -17,6 +17,7 @@ public class PlayerInputActions : MonoBehaviour
         InputActions.Player.Crouch.performed += pctrl.OnCrouchInput;
         InputActions.Player.Crouch.canceled += pctrl.OnCrouchInputCanceled;
         InputActions.Player.Attack.performed += pctrl.OnFireInput;
+        InputActions.Player.Attack.canceled += pctrl.OnFireInputCanceled;
     }
 
     private void OnEnable()
