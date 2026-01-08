@@ -6,9 +6,11 @@ namespace StateController
     {
         Idle = 100,
         Move,
+        Sprint,
         Jump,
         Crouch,
-        Fire = 200,
+        ActionIdle = 200,
+        Fire,
         Reload,
         Melee,
         Throw
