@@ -45,6 +45,7 @@ public class PlayerContext : MonoBehaviour
 
     private void Update()
     {
+        UpdateFireInput();
         MovementSM?.UpdateState();
         ActionSM?.UpdateState();
     }
@@ -60,6 +61,14 @@ public class PlayerContext : MonoBehaviour
         this.maxHp = maxHp;
         this.currentHp = currentHp;
         this.moveSpeed = moveSpeed;
+    }
+
+    private void UpdateFireInput()
+    {
+        var input = player.fireInput;
+
+        input.wasPressedThisFrame = input.isPressed && !player.prevFirePressed;
+        player.prevFirePressed = input.isPressed;
     }
 
     private void InitMovementStateMachine()

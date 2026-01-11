@@ -42,5 +42,4 @@ public class MainWeapon : Weapon
 
         SetFireMode(FireMode.Auto);
     }
-
 }

@@ -1,0 +1,58 @@
+using System.Net;
+using UnityEngine;
+
+public class HybridFireStrategy : IWeaponFireStrategy
+{
+    public void Fire(WeaponContext ctx)
+    {
+        if (Time.time < ctx.lastFireTime + ctx.fireRate) return;
+        ctx.lastFireTime = Time.time;
+
+        Vector3 dir = GetSpreadDirection(ctx);
+
+        Debug.DrawRay(ctx.muzzle.position, dir * ctx.hitscanRange, Color.red);
+        if (Physics.Raycast(ctx.muzzle.position, dir, out var hit, ctx.hitscanRange))
+        {
+            if (hit.collider.TryGetComponent<IDamageable>(out var dmg))
+            {
+                DamageContext context = new()
+                {
+                    attacker = ctx.owner,
+                    target = hit.collider.gameObject,
+                    hitPoint = hit.point,
+                    hitNormal = hit.normal,
+                    damage = ctx.damage,
+                    distance = hit.distance,
+                    damageType = DamageType.Bullet,
+                    hitZone = ctx.dms.ResolveHitZone(hit.collider)
+                };
+
+                DamageResult res = ctx.dms.Pipeline.Calculate(context);
+                dmg.ApplyDamage(res);
+            }
+
+            SpawnTracer(hit.point);
+            return;
+        }
+
+        var bm = StaticRegistry.Find<BulletManger>();
+        bm.SpawnBullet(ctx.muzzle.position, dir, ctx.bulletSpeed, ctx.damage, ctx.dms, ctx.maxRange);
+    }
+
+    Vector3 GetSpreadDirection(WeaponContext ctx)
+    {
+        Vector3 dir = ctx.muzzle.forward;
+        dir = Quaternion.Euler(
+            Random.Range(-ctx.spreadAngle, ctx.spreadAngle),
+            Random.Range(-ctx.spreadAngle, ctx.spreadAngle),
+            0f
+        ) * dir;
+        return dir.normalized;
+    }
+
+
+    void SpawnTracer(Vector3 endPoint)
+    {
+        // LineRenderer
+    }
+}
