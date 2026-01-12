@@ -827,7 +827,7 @@ MonoBehaviour:
   ISGROUNDED: 0
   isJump: 0
   isCrouching: 0
-  isFiring: 0
+  prevFirePressed: 0
 --- !u!114 &476954670
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -898,6 +898,7 @@ MonoBehaviour:
   weapons:
   - {fileID: 543497638}
   - {fileID: 2077961268}
+  currentWeapon: {fileID: 0}
 --- !u!1 &529453825
 GameObject:
   m_ObjectHideFlags: 0
@@ -1037,6 +1038,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 480273e5131b7214999c5759e5be2e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HybridWeapon
+  currentMode: 0
   muzzle: {fileID: 1543708014}
   muzzleVFX: {fileID: 0}
   hitscanRange: 30
@@ -1045,6 +1047,8 @@ MonoBehaviour:
   fireRate: 0.1
   maxRange: 150
   spreadAngle: 0.6
+  maxMag: 0
+  currentMag: 0
 --- !u!1 &628779945
 GameObject:
   m_ObjectHideFlags: 0
@@ -3287,6 +3291,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f129dff10b647b4f923e71b8add5b74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SubWeapon
+  currentMode: 0
   muzzle: {fileID: 1543708014}
   muzzleVFX: {fileID: 0}
   hitscanRange: 15
@@ -3295,6 +3300,8 @@ MonoBehaviour:
   fireRate: 0.25
   maxRange: 75
   spreadAngle: 0.8
+  maxMag: 0
+  currentMag: 0
 --- !u!1 &2099172505
 GameObject:
   m_ObjectHideFlags: 0

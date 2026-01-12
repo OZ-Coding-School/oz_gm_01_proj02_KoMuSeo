@@ -39,8 +39,7 @@ public class PlayerController : MonoBehaviour
         OnMouseInput();
         ISGROUNDED = playerCtx.CharacterController.isGrounded;
 
-        fireInput.wasPressedThisFrame = fireInput.isPressed && !prevFirePressed;
-        prevFirePressed = fireInput.isPressed;
+        
     }
 
     public void OnMouseInput()

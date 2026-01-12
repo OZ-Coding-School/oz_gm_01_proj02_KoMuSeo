@@ -11,7 +11,7 @@ public class ActionIdleState : BaseState
 
     public override void OnUpdateState()
     {
-        if (Controller.fireInput.isPressed)
+        if (Controller.fireInput.wasPressedThisFrame)
         {
             Controller.playerCtx.ActionSM.ChangeState(StateName.Fire);
         } 

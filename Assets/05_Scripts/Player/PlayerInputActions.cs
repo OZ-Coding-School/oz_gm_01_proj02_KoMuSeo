@@ -28,7 +28,7 @@ public class PlayerInputActions : MonoBehaviour
 
         InputActions.Player.Next.performed += pctrl.OnSubWeaponInput;
 
-        InputActions.Player.FireModeChange.started += pctrl.OnModeInput;
+        InputActions.Player.FireModeChange.performed += pctrl.OnModeInput;
     }
 
     private void OnEnable()
