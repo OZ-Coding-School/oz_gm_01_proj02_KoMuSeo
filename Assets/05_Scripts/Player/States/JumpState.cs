@@ -10,13 +10,12 @@ public class JumpState : BasePlayerState
 
     public override void OnUpdateState()
     {
-        ApplyGravity();
-        CommonMovement();
-
         if (playerCtx.CharacterController.isGrounded && yVelocity <= 0f)
         {
             playerCtx.MovementSM.ChangeState(Controller.PrevMovementState);
         }
+
+        base.OnUpdateState();
     }
 
     public override void OnExitState()

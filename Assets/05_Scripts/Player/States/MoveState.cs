@@ -30,7 +30,6 @@ public class MoveState : BasePlayerState
             playerCtx.MovementSM.ChangeState(StateName.Idle);
         }
 
-        ApplyGravity();
-        CommonMovement();
+        base.OnUpdateState();
     }
 }

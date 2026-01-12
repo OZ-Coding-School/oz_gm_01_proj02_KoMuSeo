@@ -13,6 +13,11 @@ public abstract class BasePlayerState : BaseState
         playerCtx = Controller.playerCtx;
     }
 
+    public override void OnUpdateState()
+    {
+        CommonMovement();
+    }
+
     public void ApplyGravity()
     {
         if (playerCtx.CharacterController.isGrounded && yVelocity < 0f)
@@ -23,6 +28,7 @@ public abstract class BasePlayerState : BaseState
 
     public void CommonMovement()
     {
+        ApplyGravity();
         float currentSpeed = playerCtx.MoveSpeed * Time.deltaTime;
         Vector3 moveDir = Controller.transform.right * Controller.inputDir.x + 
             Controller.transform.forward * Controller.inputDir.z;
