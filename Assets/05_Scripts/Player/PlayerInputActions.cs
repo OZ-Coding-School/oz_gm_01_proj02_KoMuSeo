@@ -29,6 +29,9 @@ public class PlayerInputActions : MonoBehaviour
         InputActions.Player.Next.performed += pctrl.OnSubWeaponInput;
 
         InputActions.Player.FireModeChange.performed += pctrl.OnModeInput;
+
+        InputActions.Player.Melee.started += pctrl.OnMeleeInput;
+        InputActions.Player.Melee.canceled += pctrl.OnMeleeInputCanceled;
     }
 
     private void OnEnable()

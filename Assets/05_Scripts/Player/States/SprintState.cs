@@ -28,8 +28,7 @@ public class SprintState : BasePlayerState
             return;
         }
 
-        ApplyGravity();
-        CommonMovement();
+        base.OnUpdateState();
     }
 
     public override void OnExitState()

@@ -14,6 +14,11 @@ public class ActionIdleState : BaseState
         if (Controller.fireInput.wasPressedThisFrame)
         {
             Controller.playerCtx.ActionSM.ChangeState(StateName.Fire);
-        } 
+        }
+
+        if (Controller.isMelee)
+        {
+            Controller.playerCtx.ActionSM.ChangeState(StateName.Melee);
+        }
     }
 }

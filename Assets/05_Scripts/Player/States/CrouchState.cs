@@ -35,8 +35,7 @@ public class CrouchState : BasePlayerState
             playerCtx.MovementSM.ChangeState(state);
         }
 
-        ApplyGravity();
-        CommonMovement();
+        base.OnUpdateState();
     }
 
     public override void OnExitState()

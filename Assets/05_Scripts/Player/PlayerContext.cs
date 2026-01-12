@@ -21,8 +21,11 @@ public class PlayerContext : MonoBehaviour
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float jumpForce;
     [SerializeField] protected float sensitivity;
+    public string CurrentMoveState;
+    public string CurrentActionState;
 
     private PlayerController player;
+
 
     private void Awake()
     {
@@ -45,6 +48,9 @@ public class PlayerContext : MonoBehaviour
 
     private void Update()
     {
+        CurrentMoveState = MovementSM?.CurrentState.ToString();
+        CurrentActionState = ActionSM?.CurrentState.ToString();
+
         UpdateFireInput();
         MovementSM?.UpdateState();
         ActionSM?.UpdateState();

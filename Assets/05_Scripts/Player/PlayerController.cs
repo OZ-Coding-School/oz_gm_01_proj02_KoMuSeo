@@ -4,6 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
+using UnityEngine.Pool;
 
 [RequireComponent(typeof(PlayerContext), typeof(PlayerInputActions))]
 public class PlayerController : MonoBehaviour
@@ -25,6 +26,7 @@ public class PlayerController : MonoBehaviour
     public bool isCrouching = false;
     //public bool isFiring = false;
     public bool prevFirePressed;
+    public bool isMelee;
 
     private void Awake()
     {
@@ -123,5 +125,15 @@ public class PlayerController : MonoBehaviour
     public void OnSubWeaponInput(InputAction.CallbackContext context)
     {
         weapons.Equip(1);
+    }
+
+    public void OnMeleeInput(InputAction.CallbackContext context)
+    {
+        isMelee = context.ReadValueAsButton();
+    }
+
+    public void OnMeleeInputCanceled(InputAction.CallbackContext context)
+    {
+        isMelee = context.ReadValueAsButton();
     }
 }
