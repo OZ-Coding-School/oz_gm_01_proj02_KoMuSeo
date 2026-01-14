@@ -20,7 +20,7 @@ public class PlayerContext : MonoBehaviour
     protected float currentHp;
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float jumpForce;
-    [SerializeField] protected float sensitivity;
+    [SerializeField, Range(0,2)] protected float sensitivity;
     public string CurrentMoveState;
     public string CurrentActionState;
 

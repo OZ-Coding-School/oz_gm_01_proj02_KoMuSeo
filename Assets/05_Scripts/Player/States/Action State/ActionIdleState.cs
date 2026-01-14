@@ -13,7 +13,11 @@ public class ActionIdleState : BaseState
     {
         if (Controller.fireInput.wasPressedThisFrame)
         {
-            Controller.playerCtx.ActionSM.ChangeState(StateName.Fire);
+            var weapon = Controller.weaponManager.GetCurrentWeapon();
+            Controller.playerCtx.ActionSM.ChangeState(
+                weapon != null && weapon.UseThrowState ?
+                StateName.Throw :
+                StateName.Fire);
         }
 
         if (Controller.isMelee)

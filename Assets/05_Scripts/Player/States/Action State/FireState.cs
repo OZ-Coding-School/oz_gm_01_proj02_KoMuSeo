@@ -10,7 +10,7 @@ public class FireState : BaseState
     public override void OnEnterState()
     {
         base.OnEnterState();
-        currentWeapon = Controller.weapons.GetCurrentWeapon();
+        currentWeapon = Controller.weaponManager.GetCurrentWeapon();
         currentWeapon.Fire(Controller.fireInput);
     }
 

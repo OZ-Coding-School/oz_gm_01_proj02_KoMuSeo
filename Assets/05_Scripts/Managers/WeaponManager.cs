@@ -1,6 +1,4 @@
-using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 using System;
 
 public class WeaponManager : MonoBehaviour
@@ -17,7 +15,10 @@ public class WeaponManager : MonoBehaviour
         {
             weapons[i].gameObject.SetActive(false);
         }
+    }
 
+    private void Start()
+    {
         Equip(0);
     }
 

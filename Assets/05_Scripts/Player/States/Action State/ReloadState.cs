@@ -18,7 +18,7 @@ public class ReloadState : BaseState
         timer = 0;
         takeoffMagazine = false;
 
-        currentWeapon = Controller.weapons.GetCurrentWeapon();
+        currentWeapon = Controller.weaponManager.GetCurrentWeapon();
         currentWeapon.ReloadInvoke();
     }
 
@@ -39,7 +39,7 @@ public class ReloadState : BaseState
 
     public override void OnExitState()
     {
-        currentWeapon.currentMag = currentWeapon.maxMag;
+        currentWeapon.CurrentMag = currentWeapon.MaxMag;
         Controller.isReload = false;
     }
 }

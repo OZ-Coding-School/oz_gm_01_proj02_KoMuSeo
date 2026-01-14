@@ -35,12 +35,25 @@ public abstract class Weapon : MonoBehaviour
     public float spreadAngle = 0.6f;
 
     [Header("Mag"), Tooltip("ÀåÅº ¼ö Á¦ÇÑ")]
-    public int maxMag;
-    public int currentMag;
+    [SerializeField] int maxMag;
+    [SerializeField] int currentMag;
+    public int MaxMag { get { return maxMag; } set { maxMag = value; } }
+    public int CurrentMag 
+    { 
+        get { return currentMag; } 
+        set 
+        { 
+            currentMag = value;
+            OnAmmoChanged?.Invoke(CurrentMag, MaxMag);
+        } 
+    }
+    public virtual bool UseThrowState => false;
 
-    public event Action OnWeaponFire;
+    public event Action<int, int> OnWeaponFire;
     public event Action OnReload;
     public event Action OnAmmoEmpty;
+    public event Action<int, int> OnAmmoChanged;
+
 
     protected virtual void Awake()
     {
@@ -48,7 +61,7 @@ public abstract class Weapon : MonoBehaviour
         fireStrategy = new HybridFireStrategy();
         modes = Enum.GetValues(typeof(FireMode)).Cast<FireMode>().ToArray();
 
-        currentMag = maxMag;
+        CurrentMag = MaxMag;
     }
 
     protected virtual void Start()
@@ -84,20 +97,20 @@ public abstract class Weapon : MonoBehaviour
 
     public virtual void DoFire(WeaponContext context)
     {
-        if (currentMag <= 0)
+        if (CurrentMag <= 0)
         {
-            AmmoEmptyInvok();
+            AmmoEmptyInvoke();
             return;
         }
 
         if (!fireStrategy.Fire(context)) return;
 
-        currentMag--;
-        OnWeaponFire?.Invoke();
+        CurrentMag--;
+        OnWeaponFire?.Invoke(CurrentMag, MaxMag);
 
-        if (currentMag <= 0)
+        if (CurrentMag <= 0)
         {
-            AmmoEmptyInvok();
+            AmmoEmptyInvoke();
         }
     }
 
@@ -106,7 +119,7 @@ public abstract class Weapon : MonoBehaviour
         OnReload?.Invoke();
     }
 
-    void AmmoEmptyInvok()
+    public void AmmoEmptyInvoke()
     {
         OnAmmoEmpty?.Invoke();
     }

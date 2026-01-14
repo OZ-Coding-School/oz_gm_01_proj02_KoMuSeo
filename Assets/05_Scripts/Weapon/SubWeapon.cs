@@ -14,7 +14,7 @@ public class SubWeapon : Weapon
         context.maxRange = maxRange;
         context.spreadAngle = spreadAngle;
 
-        currentMag = maxMag;
+        CurrentMag = MaxMag;
 
         fireModes.Add(FireMode.Single, new SingleFireMode());
         SetFireMode(FireMode.Single);
