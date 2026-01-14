@@ -12,7 +12,7 @@ public class PlayerController : MonoBehaviour
     [Header("Player ref")]
     public PlayerContext playerCtx;
     public PlayerInputActions inputAction;
-    public WeaponManager weapons;
+    public WeaponManager weaponManager;
     public FireInputContext fireInput;
     public StateName PrevMovementState { get; set; } = StateName.Move;
 
@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
     {
         playerCtx = GetComponent<PlayerContext>();
         inputAction = GetComponent<PlayerInputActions>();
-        weapons = GetComponent<WeaponManager>();
+        weaponManager = GetComponent<WeaponManager>();
         fireInput = new FireInputContext();
 
         StaticRegistry.Add(this);
@@ -47,12 +47,12 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        weapons.OnWeaponChanged += BindWeapon;
+        weaponManager.OnWeaponChanged += BindWeapon;
     }
 
     private void OnDisable()
     {
-        weapons.OnWeaponChanged -= UnBindWeapon;
+        weaponManager.OnWeaponChanged -= UnBindWeapon;
     }
 
     void BindWeapon(Weapon weapon)
@@ -144,16 +144,24 @@ public class PlayerController : MonoBehaviour
 
     public void OnModeInput(InputAction.CallbackContext _)
     {
-        weapons.GetCurrentWeapon().NextFireMode();
+        weaponManager.GetCurrentWeapon().NextFireMode();
     }
 
     public void OnMainWeaponInput(InputAction.CallbackContext _)
     {
-        weapons.Equip(0);
+        if (isReload) return;
+        weaponManager.Equip(0);
     }
     public void OnSubWeaponInput(InputAction.CallbackContext _)
     {
-        weapons.Equip(1);
+        if (isReload) return;
+        weaponManager.Equip(1);
+    }
+
+    public void OnGrenadeInput(InputAction.CallbackContext _)
+    {
+        if (isReload) return;
+        weaponManager.Equip(2);
     }
 
     public void OnMeleeInput(InputAction.CallbackContext context)

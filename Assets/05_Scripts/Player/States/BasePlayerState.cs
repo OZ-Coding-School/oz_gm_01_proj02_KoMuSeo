@@ -6,11 +6,22 @@ public abstract class BasePlayerState : BaseState
     protected float yVelocity;
     protected const float gravity = -20f;
 
+    protected Vector3 newMovementVelocity;
+    protected Vector3 newMovementVelocityRef;
+
+    const float SMOOTH_TIME = 0.2f;
+
     public BasePlayerState(PlayerController controller) : base(controller) { }
 
     public override void OnEnterState()
     {
         playerCtx = Controller.playerCtx;
+
+        Vector3 moveDir = Controller.transform.right * Controller.inputDir.x +
+                          Controller.transform.forward * Controller.inputDir.y;
+
+        newMovementVelocity = moveDir.normalized * playerCtx.MoveSpeed;
+        newMovementVelocityRef = Vector3.zero;
     }
 
     public override void OnUpdateState()
@@ -29,14 +40,30 @@ public abstract class BasePlayerState : BaseState
     public void CommonMovement()
     {
         ApplyGravity();
-        float currentSpeed = playerCtx.MoveSpeed * Time.deltaTime;
         Vector3 moveDir = Controller.transform.right * Controller.inputDir.x + 
             Controller.transform.forward * Controller.inputDir.z;
+        moveDir.Normalize();
 
-        
-        Vector3 velocity = moveDir * currentSpeed;
-        velocity.y = yVelocity * Time.deltaTime;
+        Vector3 targetVelocity = moveDir * playerCtx.MoveSpeed;
 
-        playerCtx.CharacterController.Move(velocity);
+        if(moveDir.sqrMagnitude < 0.01f)
+        {
+            newMovementVelocity = Vector3.zero;
+            newMovementVelocityRef = Vector3.zero;
+        }
+        else
+        {
+            newMovementVelocity = Vector3.SmoothDamp(
+                            newMovementVelocity,
+                            targetVelocity,
+                            ref newMovementVelocityRef,
+                            SMOOTH_TIME);
+        }
+
+        Vector3 velocity = newMovementVelocity;
+        velocity.y = yVelocity;
+
+
+        playerCtx.CharacterController.Move(velocity * Time.deltaTime);
     }
 }
