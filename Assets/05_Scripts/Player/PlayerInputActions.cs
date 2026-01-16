@@ -1,9 +1,12 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerInputActions : MonoBehaviour
 {
     public InputSystem_Actions InputActions { get; private set; }
     public PlayerController pctrl;
+
+    GameManager gm;
 
     private void Awake()
     {
@@ -41,11 +44,37 @@ public class PlayerInputActions : MonoBehaviour
 
     private void OnEnable()
     {
-        InputActions.Enable();
+        StartCoroutine(Co_BindGameManager());
     }
 
     private void OnDisable()
     {
+        if (gm) gm.OnPlayStateChanged -= OnPlayStateChanged;
         InputActions.Disable();
+    }
+
+    IEnumerator Co_BindGameManager()
+    {
+        if (gm) yield break;
+
+        while ((gm = StaticRegistry.Find<GameManager>()) == null)
+            yield return null;
+
+        gm.OnPlayStateChanged += OnPlayStateChanged;
+        ApplyInputEnable();
+    }
+
+    void OnPlayStateChanged(PlayState _)
+    {
+        ApplyInputEnable();
+    }
+
+    void ApplyInputEnable()
+    {
+        bool enable = gm && gm.IsPlaying;
+        if (enable)
+            InputActions.Player.Enable();
+        else 
+            InputActions.Player.Disable();
     }
 }

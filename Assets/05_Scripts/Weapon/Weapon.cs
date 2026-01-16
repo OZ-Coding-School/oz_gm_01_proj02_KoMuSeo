@@ -47,13 +47,14 @@ public abstract class Weapon : MonoBehaviour
             OnAmmoChanged?.Invoke(CurrentMag, MaxMag);
         } 
     }
+    public FireMode CurrentMode { get { return currentMode; } }
     public virtual bool UseThrowState => false;
 
     public event Action<int, int> OnWeaponFire;
     public event Action OnReload;
     public event Action OnAmmoEmpty;
     public event Action<int, int> OnAmmoChanged;
-
+    public event Action<string> OnFireModeChanged;
 
     protected virtual void Awake()
     {
@@ -73,6 +74,7 @@ public abstract class Weapon : MonoBehaviour
     {
         if (!fireModes.ContainsKey(mode)) return;
         currentMode = mode;
+        OnFireModeChanged?.Invoke(currentMode.ToString());
     }
 
     public void NextFireMode()
@@ -85,6 +87,7 @@ public abstract class Weapon : MonoBehaviour
             if (fireModes.ContainsKey(next))
             {
                 currentMode = next;
+                OnFireModeChanged?.Invoke(currentMode.ToString());
                 return;
             }
         }

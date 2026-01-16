@@ -1,4 +1,5 @@
 using StateController;
+using System;
 using UnityEngine;
 
 public class PlayerContext : MonoBehaviour
@@ -10,7 +11,7 @@ public class PlayerContext : MonoBehaviour
     public Transform PlayerCamera;
 
     public float MaxHP { get { return maxHp; } }
-    public float CurrentHP { get { return currentHp; } }
+    public float CurrentHP { get { return currentHp; } set { currentHp = value; OnHPChanged?.Invoke(CurrentHP, MaxHP); } }
     public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
     public float JumpForce { get { return jumpForce; } set { jumpForce = value; } }
     public float Seneitivity { get { return sensitivity; } set { sensitivity = value; } }
@@ -25,7 +26,7 @@ public class PlayerContext : MonoBehaviour
     public string CurrentActionState;
 
     private PlayerController player;
-
+    public event Action<float, float> OnHPChanged;
 
     private void Awake()
     {
@@ -44,6 +45,8 @@ public class PlayerContext : MonoBehaviour
     {
         MovementSM?.EnterState();
         ActionSM?.EnterState();
+
+        CurrentHP = MaxHP;
     }
 
     private void Update()
@@ -60,13 +63,6 @@ public class PlayerContext : MonoBehaviour
     {
         MovementSM?.FixedUpdateState();
         ActionSM?.FixedUpdateState();
-    }
-
-    public void OnUpdateStat(float maxHp, float currentHp, float moveSpeed)
-    {
-        this.maxHp = maxHp;
-        this.currentHp = currentHp;
-        this.moveSpeed = moveSpeed;
     }
 
     private void UpdateFireInput()
@@ -93,5 +89,10 @@ public class PlayerContext : MonoBehaviour
         ActionSM.AddState(StateName.Reload, new ReloadState(player));
         ActionSM.AddState(StateName.Melee, new MeleeState(player));
         ActionSM.AddState(StateName.Throw, new ThrowState(player));
+    }
+
+    public void OnHPChangeInvoke()
+    {
+        OnHPChanged?.Invoke(CurrentHP, MaxHP);
     }
 }

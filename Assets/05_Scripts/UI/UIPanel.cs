@@ -13,20 +13,31 @@ public abstract class UIPanel : MonoBehaviour
         }
     }
 
-    CanvasGroup cnv;
+    CanvasGroup cg;
 
     protected virtual void Awake()
     {
-        cnv = GetComponent<CanvasGroup>();
+        cg = GetComponent<CanvasGroup>();
     }
 
     public virtual void Open()
     {
         IsOpen = true;
+        cg.alpha = 1f;
+        cg.blocksRaycasts = true;
+        cg.interactable = true;
+        OnOpened();
     }
 
     public virtual void Close()
     {
         IsOpen = false;
+        OnClosed();
+        cg.alpha = 0f;
+        cg.blocksRaycasts = false;
+        cg.interactable = false;
     }
+
+    protected virtual void OnOpened() { }
+    protected virtual void OnClosed() { }
 }
