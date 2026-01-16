@@ -1,13 +1,10 @@
 using StateController;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Interactions;
-using UnityEngine.Pool;
 
 [RequireComponent(typeof(PlayerContext), typeof(PlayerInputActions))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamageable, IRegistryAdder
 {
     [Header("Player ref")]
     public PlayerContext playerCtx;
@@ -38,7 +35,7 @@ public class PlayerController : MonoBehaviour
         weaponManager = GetComponent<WeaponManager>();
         fireInput = new FireInputContext();
 
-        StaticRegistry.Add(this);
+        AddRegistry();
     }
 
     private void Update()
@@ -183,5 +180,22 @@ public class PlayerController : MonoBehaviour
         if (isReload && currentWeapon.CurrentMag == currentWeapon.MaxMag) 
             return;
         isReload = context.ReadValueAsButton();
+    }
+
+    public void ApplyDamage(DamageResult res)
+    {
+        if (res.finalDamage >= playerCtx.MaxHP)
+            playerCtx.CurrentHP = Mathf.Max(playerCtx.CurrentHP - playerCtx.MaxHP, 0);
+        playerCtx.CurrentHP -= res.finalDamage;
+
+        if (playerCtx.CurrentHP <= 0)
+        {
+            playerCtx.CurrentHP = 0;
+        }
+    }
+
+    public void AddRegistry()
+    {
+        StaticRegistry.Add(this);
     }
 }

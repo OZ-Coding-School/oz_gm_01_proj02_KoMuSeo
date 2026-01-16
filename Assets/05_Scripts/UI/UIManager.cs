@@ -5,10 +5,10 @@ using UnityEngine;
 public enum UIKey
 {
     HUD,
+    Start,
     Pause,
     Setting,
     GameOver,
-    Popup,
     FadeOut
 }
 
@@ -16,14 +16,13 @@ public class UIManager : MonoBehaviour, IRegistryAdder
 {
     [Header("UI Panel")]
     [SerializeField] UIPanel hudUI;
+    [SerializeField] UIPanel startUI;
     [SerializeField] UIPanel pauseUI;
     [SerializeField] UIPanel settingUI;
     [SerializeField] UIPanel gameoverUI;
-    [SerializeField] UIPanel popupUI;
     [SerializeField] UIPanel fadeoutUI;
 
-    Stack<UIPanel> popupStack = new();
-    Stack<UIPanel> rewindStack = new();
+    List<UIPanel> rewindList = new();
     Dictionary<UIKey, UIPanel> panels = new();
     public event Action OnUIChanged;
 
@@ -42,10 +41,10 @@ public class UIManager : MonoBehaviour, IRegistryAdder
     {
         panels.Clear();
         Add(UIKey.HUD, hudUI);
+        Add(UIKey.Start, startUI);
         Add(UIKey.Pause, pauseUI);
         Add(UIKey.Setting, settingUI);
         Add(UIKey.GameOver, gameoverUI);
-        Add(UIKey.Popup, popupUI);
         Add(UIKey.FadeOut, fadeoutUI);
     }
 
@@ -55,19 +54,14 @@ public class UIManager : MonoBehaviour, IRegistryAdder
         panels[key] = value;
     }
 
-    public T Get<T>(UIKey key) where T : UIPanel
-    {
-        return panels.TryGetValue(key, out var p) ? p as T : null;
-    }
-
     public void Show(UIKey key, bool open)
     {
         if(!panels.TryGetValue(key, out var p) || !p) return;
 
-        if (open)
+        if (open && !p.IsOpen)
         {
             p.Open();
-            rewindStack.Push(p);
+            rewindList.Add(p);
         }
         else
             p.Close();
