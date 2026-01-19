@@ -33,6 +33,8 @@ public abstract class UIPanel : MonoBehaviour
     {
         IsOpen = false;
         OnClosed();
+
+        if (cg == null) return;
         cg.alpha = 0f;
         cg.blocksRaycasts = false;
         cg.interactable = false;
