@@ -10,7 +10,7 @@ public class UIInputs : MonoBehaviour
         um = GetComponent<UIManager>();
         inputActions = new InputSystem_Actions();
 
-        inputActions.UI.ESC.started += _ => um.Show(UIKey.Pause, true);
+        inputActions.UI.ESC.started += _ => um.ShowMenu(MenuMode.Pause, true);
     }
 
     private void OnEnable()

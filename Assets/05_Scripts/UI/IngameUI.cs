@@ -1,80 +1,41 @@
 using TMPro;
 using UnityEngine;
 
-public class IngameUI : UIPanel
+public class IngameUI : UIPanel, IBindable<HUDViewModel>
 {
     [Header("UI Elements")]
     [SerializeField] TextMeshProUGUI ammoText;
     [SerializeField] TextMeshProUGUI hpText;
     [SerializeField] TextMeshProUGUI fireModeText;
 
-    PlayerController Controller;
-    PlayerContext ctx;
-    Weapon currentWeapon;
+    HUDViewModel vm;
 
-    private void OnEnable()
+    public void Bind(HUDViewModel vm)
     {
-        Controller = StaticRegistry.Find<PlayerController>();
-        ctx = Controller.playerCtx;
-        ctx.OnHPChanged += UpdateHpUI;
+        Unbind();
 
-        Controller.weaponManager.OnWeaponChanged += OnWeaponChanged;
+        this.vm = vm;
+        if (this.vm == null) return;
 
-        OnWeaponChanged(Controller.weaponManager.currentWeapon);
+        this.vm.OnChanged += Refresh;
+        Refresh();
     }
 
-    private void OnDisable()
+    public void Unbind()
     {
-        ctx.OnHPChanged -= UpdateHpUI;
-        Controller.weaponManager.OnWeaponChanged -= OnWeaponChanged;
-        UnBindEvents();
+        if (vm == null) return;
+        vm.OnChanged -= Refresh;
     }
 
-    void OnWeaponChanged(Weapon newWeapon)
+    private void Refresh()
     {
-        UnBindEvents();
-
-        currentWeapon = newWeapon;
-
-        BindEvents(newWeapon);
+        ammoText.text = vm.AmmoText;
+        hpText.text = vm.HpText;
+        fireModeText.text = vm.FireModeText;
     }
 
-    void BindEvents(Weapon weapon)
+    protected override void OnClosed()
     {
-        weapon.OnAmmoChanged += UpdateAmmoFired;
-        weapon.OnFireModeChanged += UpdateFiremodeUI;
-
-        UpdateAmmoUI(weapon);
-        UpdateFiremodeUI(weapon.CurrentMode.ToString());
-    }
-
-    void UnBindEvents()
-    {
-        if (currentWeapon == null) return;
-        currentWeapon.OnAmmoChanged -= UpdateAmmoFired;
-        currentWeapon.OnFireModeChanged -= UpdateFiremodeUI;
-    }
-
-    public void UpdateAmmoUI(Weapon weapon)
-    {
-        int maxAmmo = weapon.MaxMag;
-        int curAmmo = weapon.CurrentMag;
-
-        ammoText.text = $"{curAmmo} / {maxAmmo}";
-    }
-
-    public void UpdateFiremodeUI(string mode)
-    {
-        fireModeText.text = mode;
-    }
-
-    public void UpdateAmmoFired(int currentMag, int maxMag)
-    {
-        ammoText.text = $"{currentMag} / {maxMag}";
-    }
-
-    public void UpdateHpUI(float current, float max)
-    {
-        hpText.text = $"{current} / {max}";
+        Unbind();
     }
 }
