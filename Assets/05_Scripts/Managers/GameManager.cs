@@ -13,6 +13,7 @@ public class GameManager : MonoBehaviour, IRegistryAdder
 {
     [Header("Variable")]
     [SerializeField]private PlayState currentPlayState;
+    SoundManager soundManager;
 
     public event Action<PlayState> OnPlayStateChanged;
     public event Action OnTimeScaleChanged;
@@ -42,8 +43,15 @@ public class GameManager : MonoBehaviour, IRegistryAdder
         StartCoroutine(Co_PlayLoop());
     }
 
+    void Start()
+    {
+        soundManager = StaticRegistry.Find<SoundManager>();
+        soundManager.PlayBGM(soundManager.GetClip("BGM_DejaVu"), transform.position, transform.rotation);
+    }
+
     private IEnumerator Co_PlayLoop()
     {
+
         SetCurrentState(PlayState.Pause);
 
         while (true)

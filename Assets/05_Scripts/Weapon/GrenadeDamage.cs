@@ -6,12 +6,15 @@ public class GrenadeDamage : MonoBehaviour
 {
     private float damage;
     private float maxRange;             // 30% damage
-    
+    private WaitForSeconds waitExplosion = new(3f);
+
     private WeaponContext ctx;
     public LayerMask enemyLayer;
 
     [SerializeField] int maxTargets = 8;
     Collider[] targets;
+    SoundManager soundManager;
+    AudioClip explosionClip;
 
     public void Init(WeaponContext ctx)
     {
@@ -24,18 +27,17 @@ public class GrenadeDamage : MonoBehaviour
         StartCoroutine(Co_Explosion());
     }
 
-    private void OnDrawGizmos()
+    private void Start()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, maxRange);
+        soundManager = StaticRegistry.Find<SoundManager>();
+        explosionClip = soundManager.GetClip("Grenade");
     }
 
     IEnumerator Co_Explosion()
     {
-        yield return new WaitForSeconds(3f);
-
+        yield return waitExplosion;
+        ObjectPoolManager.Instance.Spawn(PoolId.GrenadeExplosionVFX, transform.position, transform.rotation);
         int enemyCnt = Physics.OverlapSphereNonAlloc(transform.position, maxRange, targets, enemyLayer);
-        Debug.Log($"A : {enemyCnt}");
 
         for (int i = 0; i < enemyCnt; ++i)
         {
@@ -62,5 +64,8 @@ public class GrenadeDamage : MonoBehaviour
                 dmg.ApplyDamage(res);
             }
         }
+
+        soundManager.PlaySound(explosionClip, transform.position, transform.rotation);
+        ObjectPoolManager.Instance.Despawn(gameObject);
     }
 }
