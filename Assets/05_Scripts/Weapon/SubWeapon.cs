@@ -19,4 +19,10 @@ public class SubWeapon : Weapon
         fireModes.Add(FireMode.Single, new SingleFireMode());
         SetFireMode(FireMode.Single);
     }
+
+    protected override void Start()
+    {
+        base.Start();
+        fireSound = soundManager.GetClip("Hand Gun 1");
+    }
 }

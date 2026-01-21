@@ -7,6 +7,7 @@ public class SettingUI : UIPanel, IBindable<SettingViewModel>
     [Header("Elements")]
     [SerializeField] private Slider masterVol;
     [SerializeField] private Slider sfxVol;
+    [SerializeField] private Slider bgmVol;
     [SerializeField] private Slider sensitivitySlider;
     [SerializeField] private TMP_Dropdown resolutionDropdown;
     [SerializeField] private TMP_Dropdown screenModeDropdown;
@@ -35,6 +36,7 @@ public class SettingUI : UIPanel, IBindable<SettingViewModel>
 
         masterVol.onValueChanged.AddListener(this.vm.SetMaster);
         sfxVol.onValueChanged.AddListener(this.vm.SetSfx);
+        bgmVol.onValueChanged.AddListener(this.vm.SetBgm);
         sensitivitySlider.onValueChanged.AddListener(this.vm.SetSensitivity);
         resolutionDropdown.onValueChanged.AddListener(this.vm.SetResolution);
         screenModeDropdown.onValueChanged.AddListener(this.vm.SetScreenMode);
@@ -48,6 +50,7 @@ public class SettingUI : UIPanel, IBindable<SettingViewModel>
     {
         masterVol.SetValueWithoutNotify(vm.Master);
         sfxVol.SetValueWithoutNotify(vm.Sfx);
+        bgmVol.SetValueWithoutNotify(vm.Bgm);
         sensitivitySlider.SetValueWithoutNotify(vm.Sensitivity);
     }
 

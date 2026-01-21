@@ -17,6 +17,8 @@ public abstract class Weapon : MonoBehaviour
     protected Dictionary<FireMode, IFireModeStrategy> fireModes = new();
     [SerializeField] protected FireMode currentMode;
     FireMode[] modes;
+    protected SoundManager soundManager;
+    protected AudioClip fireSound;
 
     [Header("References"), Tooltip("ÅºÈ¯°ú ÀÌÆåÆ®°¡ ³ª¿À´Â À§Ä¡")]
     public Transform muzzle;
@@ -33,6 +35,7 @@ public abstract class Weapon : MonoBehaviour
 
     [Header("Spread"), Tooltip("ÅºÈ¯ ÆÛÁü Á¤µµ")]
     public float spreadAngle = 0.6f;
+    Quaternion rotOffset = Quaternion.Euler(0, -90f, 0);
 
     [Header("Mag"), Tooltip("ÀåÅº ¼ö Á¦ÇÑ")]
     [SerializeField] int maxMag;
@@ -68,6 +71,7 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void Start()
     {
         context.dms = StaticRegistry.Find<DamageSystem>();
+        soundManager = StaticRegistry.Find<SoundManager>();
     }
 
     public void SetFireMode(FireMode mode)
@@ -109,6 +113,12 @@ public abstract class Weapon : MonoBehaviour
         if (!fireStrategy.Fire(context)) return;
 
         CurrentMag--;
+        if(fireSound != null && muzzleVFX)
+        {
+            soundManager.PlaySound(fireSound, muzzleVFX.position, muzzleVFX.rotation);
+            ObjectPoolManager.Instance.Spawn(PoolId.MuzzleVFX, muzzleVFX.position, muzzleVFX.rotation * rotOffset);
+        }
+
         OnWeaponFire?.Invoke(CurrentMag, MaxMag);
 
         if (CurrentMag <= 0)

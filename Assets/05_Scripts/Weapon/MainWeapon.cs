@@ -23,4 +23,10 @@ public class MainWeapon : Weapon
 
         SetFireMode(FireMode.Auto);
     }
+
+    protected override void Start()
+    {
+        base.Start();
+        fireSound = soundManager.GetClip("SFX_Single Shot");
+    }
 }

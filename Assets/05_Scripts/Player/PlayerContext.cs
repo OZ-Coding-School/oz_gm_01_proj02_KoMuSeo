@@ -14,7 +14,6 @@ public class PlayerContext : MonoBehaviour
     public float CurrentHP { get { return currentHp; } set { currentHp = value; OnHPChanged?.Invoke(CurrentHP, MaxHP); } }
     public float MoveSpeed { get { return moveSpeed; } set { moveSpeed = value; } }
     public float JumpForce { get { return jumpForce; } set { jumpForce = value; } }
-    public float Seneitivity { get { return sensitivity; } set { sensitivity = value; } }
     public Transform GroundPivot { get { return groundPivot; } }
 
     [Header("Character Stat")]
@@ -22,7 +21,6 @@ public class PlayerContext : MonoBehaviour
     protected float currentHp;
     [SerializeField] protected float moveSpeed;
     [SerializeField] protected float jumpForce;
-    [SerializeField, Range(0,2)] protected float sensitivity;
     [SerializeField] protected Transform groundPivot;
     public LayerMask groundLayer;
     public float GRAVITY;

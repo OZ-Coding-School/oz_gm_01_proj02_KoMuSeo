@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour, IDamageable, IRegistryAdder
     public bool isReload;
 
     Weapon currentWeapon;
+    UIManager um;
 
     private void Awake()
     {
@@ -36,6 +37,11 @@ public class PlayerController : MonoBehaviour, IDamageable, IRegistryAdder
         fireInput = new FireInputContext();
 
         AddRegistry();
+    }
+
+    void Start()
+    {
+        um = StaticRegistry.Find<UIManager>();
     }
 
     private void Update()
@@ -70,8 +76,8 @@ public class PlayerController : MonoBehaviour, IDamageable, IRegistryAdder
     {
         if (Time.timeScale <= 0.5f) return;
         mouseDelta = Mouse.current.delta.ReadValue();
-        float mouseX = mouseDelta.x * playerCtx.Seneitivity;
-        float mouseY = mouseDelta.y * playerCtx.Seneitivity;
+        float mouseX = mouseDelta.x * um.settingVM.Sensitivity;
+        float mouseY = mouseDelta.y * um.settingVM.Sensitivity;
 
         pitch -= mouseY;
         pitch = Mathf.Clamp(pitch, -85f, 85f);

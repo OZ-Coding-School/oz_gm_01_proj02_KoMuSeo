@@ -22,5 +22,6 @@ public class GrenadeWeapon : Weapon
         CurrentMag = MaxMag;
     }
 
+
     public override bool UseThrowState => true;
 }

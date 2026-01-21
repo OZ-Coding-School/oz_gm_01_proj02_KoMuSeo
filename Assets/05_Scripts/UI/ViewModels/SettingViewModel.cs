@@ -7,38 +7,47 @@ using UnityEngine;
 public class SettingViewModel
 {
     UIManager ui;
+    SoundManager soundManager;
 
     public float Master { get; set; } = 1f;
     public float Sfx { get; set; } = 1f;
+    public float Bgm { get; set; } = 1f;
     public float Sensitivity { get; set; } = 1f;
     public event Action OnChanged;
 
     private List<Resolution> resolutions = new();
     private List<FullScreenMode> screenModes = new();
 
-    public SettingViewModel(UIManager ui)
+    public SettingViewModel(UIManager ui, SoundManager soundManager)
     {
         this.ui = ui;
+        this.soundManager = soundManager;
     }
 
     public void SetMaster(float v)
     {
         this.Master = v;
-
+        soundManager.MasterVolume = Master;
         OnChanged?.Invoke();
     }
 
     public void SetSfx(float v)
     {
         this.Sfx = v;
+        soundManager.SFXVolume = Sfx;
+        OnChanged?.Invoke();
+    }
 
+    public void SetBgm(float v)
+    {
+        this.Bgm = v;
+        soundManager.CurrentAudio.volume = Bgm;
         OnChanged?.Invoke();
     }
 
     public void SetSensitivity(float v)
     {
         Sensitivity = v;
-
         OnChanged?.Invoke();
     }
 

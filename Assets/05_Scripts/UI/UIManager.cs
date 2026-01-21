@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public enum UIKey
 {
@@ -18,12 +17,10 @@ public class UIManager : MonoBehaviour, IRegistryAdder
     [SerializeField] UIPanel hudUI;
     [SerializeField] UIPanel menuUI;
     [SerializeField] UIPanel settingUI;
-    [SerializeField] UIPanel gameoverUI;
-    [SerializeField] UIPanel fadeoutUI;
 
     HUDViewModel hudVM;
     MenuViewModel menuVM;
-    SettingViewModel settingVM;
+    public SettingViewModel settingVM { get; set; }
 
     List<UIPanel> rewindList = new();
     Dictionary<UIKey, UIPanel> panels = new();
@@ -39,10 +36,11 @@ public class UIManager : MonoBehaviour, IRegistryAdder
     {
         var player = StaticRegistry.Find<PlayerController>();
         var gm = StaticRegistry.Find<GameManager>();
+        var sm = StaticRegistry.Find<SoundManager>();
 
         hudVM = new HUDViewModel(player.playerCtx, player.weaponManager);
         menuVM = new MenuViewModel(this, gm);
-        settingVM = new SettingViewModel(this);
+        settingVM = new SettingViewModel(this, sm);
 
         Show(UIKey.HUD, true);
         ShowMenu(MenuMode.Start, true);
@@ -61,8 +59,6 @@ public class UIManager : MonoBehaviour, IRegistryAdder
         Add(UIKey.HUD, hudUI);
         Add(UIKey.Menu, menuUI);
         Add(UIKey.Setting, settingUI);
-        Add(UIKey.GameOver, gameoverUI);
-        Add(UIKey.FadeOut, fadeoutUI);
     }
 
     void Add(UIKey key, UIPanel panel)

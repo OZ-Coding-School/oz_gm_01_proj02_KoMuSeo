@@ -7,6 +7,7 @@ public enum PoolId
     Target,
     SoundPlayer,
     Grenade,
+    GrenadeExplosionVFX,
     HitVFX,
     MuzzleVFX
 }

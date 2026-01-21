@@ -13,6 +13,8 @@ public class GrenadeDamage : MonoBehaviour
 
     [SerializeField] int maxTargets = 8;
     Collider[] targets;
+    SoundManager soundManager;
+    AudioClip explosionClip;
 
     public void Init(WeaponContext ctx)
     {
@@ -25,16 +27,16 @@ public class GrenadeDamage : MonoBehaviour
         StartCoroutine(Co_Explosion());
     }
 
-    private void OnDrawGizmos()
+    private void Start()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireSphere(transform.position, maxRange);
+        soundManager = StaticRegistry.Find<SoundManager>();
+        explosionClip = soundManager.GetClip("Grenade");
     }
 
     IEnumerator Co_Explosion()
     {
         yield return waitExplosion;
-
+        ObjectPoolManager.Instance.Spawn(PoolId.GrenadeExplosionVFX, transform.position, transform.rotation);
         int enemyCnt = Physics.OverlapSphereNonAlloc(transform.position, maxRange, targets, enemyLayer);
 
         for (int i = 0; i < enemyCnt; ++i)
@@ -63,6 +65,7 @@ public class GrenadeDamage : MonoBehaviour
             }
         }
 
+        soundManager.PlaySound(explosionClip, transform.position, transform.rotation);
         ObjectPoolManager.Instance.Despawn(gameObject);
     }
 }
